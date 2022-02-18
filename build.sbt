@@ -22,8 +22,10 @@ lazy val effectieCe3 = subProject("cats-effect3")
       libs.loggerFLog4s,
       libs.extrasHedgehogCe3,
     ) ++
+      libs.refined ++
       libs.http4s ++
-      libs.doobie
+      libs.doobie ++
+      libs.pureConfig
   )
 
 lazy val props = new {
@@ -34,8 +36,11 @@ lazy val props = new {
   val SonatypeRepository     = s"https://$SonatypeCredentialHost/service/local"
 
   val NewtypeVersion = "0.4.4"
+  val RefinedVersion = "0.9.28"
 
   val Http4sVersion = "0.23.7"
+
+  val PureConfigVersion = "0.17.1"
 
   val CirceVersion = "0.14.1"
 
@@ -58,11 +63,18 @@ lazy val libs = new {
 
   lazy val newtype = "io.estatico" %% "newtype" % props.NewtypeVersion
 
+  lazy val refined = List(
+    "eu.timepit" %% "refined"            % props.RefinedVersion,
+    "eu.timepit" %% "refined-cats"       % props.RefinedVersion,
+//    "eu.timepit" %% "refined-eval"            % props.RefinedVersion,
+    "eu.timepit" %% "refined-pureconfig" % props.RefinedVersion,
+  )
+
   lazy val effect2Ce = "io.kevinlee" %% "effectie-cats-effect" % props.Effectie2Version
 
   lazy val effect2Ce3 = "io.kevinlee" %% "effectie-cats-effect3" % props.Effectie2Version
 
-  lazy val loggerFCats = "io.kevinlee" %% "logger-f-cats"  % props.LoggerFVersion
+  lazy val loggerFCats  = "io.kevinlee" %% "logger-f-cats"  % props.LoggerFVersion
   lazy val loggerFLog4s = "io.kevinlee" %% "logger-f-log4s" % props.LoggerFVersion
 
   lazy val http4s = List(
@@ -70,6 +82,11 @@ lazy val libs = new {
     "org.http4s" %% "http4s-blaze-client" % props.Http4sVersion,
     "org.http4s" %% "http4s-circe"        % props.Http4sVersion,
     "org.http4s" %% "http4s-dsl"          % props.Http4sVersion
+  )
+
+  lazy val pureConfig = List(
+    "com.github.pureconfig" %% "pureconfig"        % props.PureConfigVersion,
+    "com.github.pureconfig" %% "pureconfig-http4s" % props.PureConfigVersion,
   )
 
   lazy val circe = "io.circe" %% "circe-generic" % props.CirceVersion
