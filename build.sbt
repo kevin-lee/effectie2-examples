@@ -9,6 +9,10 @@ lazy val effectieExamples = (project in file("."))
   .aggregate(effectieCe3)
 
 ThisBuild / resolvers += "sonatype-snapshots" at s"https://${props.SonatypeCredentialHost}/content/repositories/snapshots"
+ThisBuild / scalafixConfig := (
+  if (scalaVersion.value.startsWith("3")) file(".scalafix-scala3.conf").some
+  else file(".scalafix-scala2.conf").some
+)
 
 updateOptions := updateOptions.value.withLatestSnapshots(true)
 //updateOptions := updateOptions.value.withCachedResolution(false)
@@ -118,13 +122,19 @@ def subProject(projectName: String): Project = {
   val prefixedName = prefixName(projectName)
   Project(prefixedName, file(s"examples/$prefixedName"))
     .settings(
-      name          := prefixedName,
+      name           := prefixedName,
       libraryDependencies ++= List(
         libs.circe,
         libs.logback,
       ) ++ libs.hedgehog,
       testFrameworks += new TestFramework("hedgehog.sbt.Framework"),
-      updateOptions := updateOptions.value.withLatestSnapshots(true),
+      updateOptions  := updateOptions.value.withLatestSnapshots(true),
+      scalafixConfig := (
+        if (scalaVersion.value.startsWith("3"))
+          ((ThisBuild / baseDirectory.value) / ".scalafix-scala3.conf").some
+        else
+          ((ThisBuild / baseDirectory.value) / ".scalafix-scala2.conf").some
+      )
       //    updateOptions := updateOptions.value.withCachedResolution(false)
 
     )
