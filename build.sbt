@@ -24,7 +24,11 @@ lazy val effectieCe3 = subProject("cats-effect3")
       libs.effect2Ce3,
       libs.loggerFCats,
       libs.loggerFLog4s,
+      libs.extrasCats,
+      libs.extrasRefinement,
       libs.extrasHedgehogCe3,
+      libs.circeGeneric,
+      libs.circeRefined,
     ) ++
       libs.refined ++
       libs.http4s ++
@@ -42,7 +46,7 @@ lazy val props = new {
   val NewtypeVersion = "0.4.4"
   val RefinedVersion = "0.9.28"
 
-  val Http4sVersion = "0.23.7"
+  val Http4sVersion = "0.23.11"
 
   val PureConfigVersion = "0.17.1"
 
@@ -54,13 +58,13 @@ lazy val props = new {
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-SNAPSHOT"
+  val Effectie2Version = "2.0.0-beta1"
 
-  val LoggerFVersion = "2.0.0-SNAPSHOT"
+  val LoggerFVersion = "2.0.0-beta1"
 
   val HedgehogVersion = "0.8.0"
 
-  val ExtrasVersion = "0.4.0"
+  val ExtrasVersion = "0.13.0"
 }
 
 lazy val libs = new {
@@ -82,8 +86,8 @@ lazy val libs = new {
   lazy val loggerFLog4s = "io.kevinlee" %% "logger-f-log4s" % props.LoggerFVersion
 
   lazy val http4s = List(
-    "org.http4s" %% "http4s-blaze-server" % props.Http4sVersion,
-    "org.http4s" %% "http4s-blaze-client" % props.Http4sVersion,
+    "org.http4s" %% "http4s-ember-server" % props.Http4sVersion,
+    "org.http4s" %% "http4s-ember-client" % props.Http4sVersion,
     "org.http4s" %% "http4s-circe"        % props.Http4sVersion,
     "org.http4s" %% "http4s-dsl"          % props.Http4sVersion
   )
@@ -91,9 +95,11 @@ lazy val libs = new {
   lazy val pureConfig = List(
     "com.github.pureconfig" %% "pureconfig"        % props.PureConfigVersion,
     "com.github.pureconfig" %% "pureconfig-http4s" % props.PureConfigVersion,
+    "com.github.pureconfig" %% "pureconfig-ip4s" % props.PureConfigVersion,
   )
 
-  lazy val circe = "io.circe" %% "circe-generic" % props.CirceVersion
+  lazy val circeGeneric = "io.circe" %% "circe-generic" % props.CirceVersion
+  lazy val circeRefined = "io.circe" %% "circe-refined" % props.CirceVersion
 
   lazy val doobie = List(
     "org.tpolecat" %% "doobie-core"   % props.DoobieVersion,
@@ -105,6 +111,8 @@ lazy val libs = new {
   lazy val logback = "ch.qos.logback" % "logback-classic" % props.LogbackVersion % Runtime
   lazy val svmSubs = "org.scalameta" %% "svm-subs"        % props.SvmSubsVersion
 
+  lazy val extrasCats        = "io.kevinlee" %% "extras-cats"                  % props.ExtrasVersion
+  lazy val extrasRefinement  = "io.kevinlee" %% "extras-refinement"            % props.ExtrasVersion
   lazy val extrasHedgehogCe3 = "io.kevinlee" %% "extras-hedgehog-cats-effect3" % props.ExtrasVersion % Test
 
   lazy val hedgehog = List(
@@ -124,17 +132,16 @@ def subProject(projectName: String): Project = {
     .settings(
       name           := prefixedName,
       libraryDependencies ++= List(
-        libs.circe,
         libs.logback,
       ) ++ libs.hedgehog,
       testFrameworks += new TestFramework("hedgehog.sbt.Framework"),
       updateOptions  := updateOptions.value.withLatestSnapshots(true),
       scalafixConfig := (
         if (scalaVersion.value.startsWith("3"))
-          ((ThisBuild / baseDirectory.value) / ".scalafix-scala3.conf").some
+          ((ThisBuild / baseDirectory).value / ".scalafix-scala3.conf").some
         else
-          ((ThisBuild / baseDirectory.value) / ".scalafix-scala2.conf").some
-      )
+          ((ThisBuild / baseDirectory).value / ".scalafix-scala2.conf").some
+      ),
       //    updateOptions := updateOptions.value.withCachedResolution(false)
 
     )
