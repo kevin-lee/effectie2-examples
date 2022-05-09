@@ -1,0 +1,3 @@
+dependencies: [ 'update/**', 'dependabot/**' ]
+documentation: [ 'docs/**' ]
+pr: '**'
