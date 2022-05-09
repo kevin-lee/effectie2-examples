@@ -1,0 +1,33 @@
+name: Build All
+
+on: [push]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        scala:
+          - { version: "2.13.8", binary-version: "2", java-version: "adopt@1.11" }
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: olafurpg/setup-scala@v10
+        with:
+          java-version: ${{ matrix.scala.java-version }}
+
+      - name: Cache SBT
+        uses: actions/cache@v2.1.5
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.cache/coursier
+            ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ matrix.scala.binary-version }}-${{ hashFiles('**/*.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-${{ matrix.scala.binary-version }}-
+
+      - name: Build for Scala ${{ matrix.scala.version }}
+        run: .github/workflows/sbt-build-all.sh ${{ matrix.scala.version }}
