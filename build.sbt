@@ -1,6 +1,6 @@
 ThisBuild / organization := "io.kevinlee"
 ThisBuild / version      := "0.1.0-SNAPSHOT"
-ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalaVersion := "2.13.9"
 
 lazy val effectieExamples = (project in file("."))
   .settings(
@@ -44,27 +44,26 @@ lazy val props = new {
   val SonatypeRepository     = s"https://$SonatypeCredentialHost/service/local"
 
   val NewtypeVersion = "0.4.4"
-  val RefinedVersion = "0.9.28"
+  val RefinedVersion = "0.10.1"
 
-  val Http4sVersion = "0.23.11"
+  val Http4sVersion = "0.23.16"
 
   val PureConfigVersion = "0.17.1"
 
-  val CirceVersion = "0.14.1"
+  val CirceVersion = "0.14.3"
 
   val DoobieVersion = "1.0.0-RC2"
 
-  val LogbackVersion = "1.2.10"
+  val LogbackVersion = "1.4.1"
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta1"
+  val Effectie2Version = "2.0.0-beta2"
+  val LoggerFVersion   = "2.0.0-beta2"
 
-  val LoggerFVersion = "2.0.0-beta1"
+  val HedgehogVersion = "0.9.0"
 
-  val HedgehogVersion = "0.8.0"
-
-  val ExtrasVersion = "0.13.0"
+  val ExtrasVersion = "0.19.0"
 }
 
 lazy val libs = new {
@@ -95,7 +94,7 @@ lazy val libs = new {
   lazy val pureConfig = List(
     "com.github.pureconfig" %% "pureconfig"        % props.PureConfigVersion,
     "com.github.pureconfig" %% "pureconfig-http4s" % props.PureConfigVersion,
-    "com.github.pureconfig" %% "pureconfig-ip4s" % props.PureConfigVersion,
+    "com.github.pureconfig" %% "pureconfig-ip4s"   % props.PureConfigVersion,
   )
 
   lazy val circeGeneric = "io.circe" %% "circe-generic" % props.CirceVersion

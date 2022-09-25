@@ -6,8 +6,8 @@ import effectie.core.Fx
 import effectie.syntax.all._
 import eu.timepit.refined.auto._
 import example.service.Jokes
-import loggerf.cats.show._
-import loggerf.cats.syntax.all._
+import loggerf.instances.show._
+import loggerf.syntax.all._
 import loggerf.core.Log
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec._
@@ -35,7 +35,7 @@ object JokeRoutes {
           .flatMap(Ok(_))
           .recoverFromNonFatalWith {
             case err: java.util.concurrent.TimeoutException =>
-              pureOf(s">>> Client timeout: ${err.getMessage}").logPure(infoA) *>
+              pureOf(s">>> Client timeout: ${err.getMessage}").log(infoA) *>
                 ServiceUnavailable(ErrorMessage("[Client] The request timed out"))
           }
     }

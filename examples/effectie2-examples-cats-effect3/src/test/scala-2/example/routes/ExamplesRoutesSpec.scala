@@ -8,7 +8,7 @@ import example.service.Greeter
 import extras.hedgehog.cats.effect.CatsEffectRunner
 import hedgehog._
 import hedgehog.runner._
-import loggerf.cats.instances._
+import loggerf.instances.cats._
 import loggerf.core.Log
 import loggerf.logger.CanLog
 import org.http4s._
@@ -42,7 +42,7 @@ object ExamplesRoutesSpec extends Properties {
     implicit val dsl: Http4sDsl[IO] = org.http4s.dsl.io
     implicit val ticker: Ticker     = Ticker.withNewTestContext()
 
-    import effectie.cats.fx._
+    import effectie.ce3.fx._
     val expected = Status.Ok
     val actual   = helloWorld[IO](name).map(_.status)
     actual.completeThen(status => status ==== expected)
@@ -55,7 +55,7 @@ object ExamplesRoutesSpec extends Properties {
     implicit val dsl: Http4sDsl[IO] = org.http4s.dsl.io
     implicit val ticker: Ticker     = Ticker.withNewTestContext()
 
-    import effectie.cats.fx._
+    import effectie.ce3.fx._
     val expected = s"{\"message\":\"Hello, ${name.value}\"}"
     val actual   = helloWorld[IO](name).flatMap(_.as[String])
     actual.completeThen(message => message ==== expected)
@@ -72,7 +72,7 @@ object ExamplesRoutesSpec extends Properties {
     implicit val dsl: Http4sDsl[IO] = org.http4s.dsl.io
     implicit val ticker: Ticker     = Ticker.withNewTestContext()
 
-    import effectie.cats.fx._
+    import effectie.ce3.fx._
     val expected = Status.Ok
     val actual   = greet[IO](message, name).map(_.status)
     actual.completeThen(status => status ==== expected)
@@ -89,19 +89,19 @@ object ExamplesRoutesSpec extends Properties {
     implicit val dsl: Http4sDsl[IO] = org.http4s.dsl.io
     implicit val ticker: Ticker     = Ticker.withNewTestContext()
 
-    import effectie.cats.fx._
+    import effectie.ce3.fx._
     val expected = s"{\"message\":\"${message.value} ${name.value}\"}"
     val actual   = greet[IO](message, name).flatMap(_.as[String])
     actual.completeThen(message => message ==== expected)
   }
 
-  private[this] def helloWorld[F[_]: Fx: Log: Monad: Http4sDsl: Temporal](name: Greeter.Name): F[Response[F]] = {
+  private[this] def helloWorld[F[*]: Fx: Log: Monad: Http4sDsl: Temporal](name: Greeter.Name): F[Response[F]] = {
     val getHW   = Request[F](Method.GET, Uri.unsafeFromString(s"/hello/${name.value}"))
     val greeter = Greeter[F]
     GreetingRoutes.helloWorldRoutes(greeter).orNotFound(getHW)
   }
 
-  private[this] def greet[F[_]: Fx: Monad: Http4sDsl: Temporal](
+  private[this] def greet[F[*]: Fx: Monad: Http4sDsl: Temporal](
     message: Greeter.GreetingMessage,
     name: Greeter.Name
   ): F[Response[F]] = {

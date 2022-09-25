@@ -12,7 +12,7 @@ import io.circe.refined._
 import io.circe.{Codec, Decoder, Encoder}
 import io.estatico.newtype.macros.newtype
 import loggerf.core.Log
-import loggerf.cats.syntax.all._
+import loggerf.syntax.all._
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.dsl.Http4sDsl
