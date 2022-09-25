@@ -11,8 +11,8 @@ import example.routes.{GreetingRoutes, JokeRoutes}
 import example.service.{Greeter, Jokes}
 import extras.cats.syntax.option._
 import fs2.Stream
-import loggerf.cats.syntax.all._
 import loggerf.core._
+import loggerf.syntax.all._
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.dsl.Http4sDsl

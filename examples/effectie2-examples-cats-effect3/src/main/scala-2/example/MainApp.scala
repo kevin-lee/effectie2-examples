@@ -2,10 +2,10 @@ package example
 
 import cats.effect._
 import cats.syntax.all._
-import effectie.cats.fx._
+import effectie.ce3.fx._
 import example.config.AppConfig
 import extras.cats.syntax.all._
-import loggerf.cats.instances._
+import loggerf.instances.cats._
 import loggerf.logger._
 import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.dsl.Http4sDsl

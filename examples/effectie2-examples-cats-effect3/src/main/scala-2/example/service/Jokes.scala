@@ -11,8 +11,8 @@ import io.circe.Codec
 import io.circe.generic.semiauto._
 import io.estatico.newtype.macros.newtype
 import loggerf.core._
-import loggerf.cats.syntax.all._
-import loggerf.cats.show._
+import loggerf.syntax.all._
+import loggerf.instances.show._
 import org.http4s.Method._
 import org.http4s.Uri
 import org.http4s.circe.CirceEntityCodec._

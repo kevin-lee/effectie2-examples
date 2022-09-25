@@ -6,9 +6,9 @@ import cats.syntax.all._
 import effectie.core._
 import effectie.syntax.all._
 import example.service.Example
-import loggerf.cats.show._
-import loggerf.cats.syntax.all._
 import loggerf.core._
+import loggerf.instances.show._
+import loggerf.syntax.all._
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.dsl.Http4sDsl
