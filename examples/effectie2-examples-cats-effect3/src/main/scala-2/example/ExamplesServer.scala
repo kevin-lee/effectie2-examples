@@ -33,6 +33,7 @@ object ExamplesServer {
                   EmberClientBuilder
                     .default[F]
                     .withTimeout(config.jokes.client.requestTimeout)
+                    .withHttp2
                     .build
                 )
       greeter = Greeter[F]
@@ -68,6 +69,7 @@ object ExamplesServer {
                       .default[F]
                       .withHost(config.server.host)
                       .withPort(config.server.port.toPort)
+                      .withHttp2
                       .withHttpApp(httpApp)
                       .build >> Resource.eval(Async[F].never)
                   )
