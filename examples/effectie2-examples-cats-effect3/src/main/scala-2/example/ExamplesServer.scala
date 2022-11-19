@@ -13,6 +13,7 @@ import extras.cats.syntax.option._
 import fs2.Stream
 import loggerf.core._
 import loggerf.syntax.all._
+import org.http4s.Response
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.dsl.Http4sDsl
@@ -20,7 +21,6 @@ import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.middleware.{AutoSlash, Logger, Timeout}
 import org.http4s.syntax.all._
-import org.http4s.{Response, Status}
 
 /** @author Kevin Lee
   * @since 2022-01-30
@@ -44,13 +44,15 @@ object ExamplesServer {
           Timeout(
             config.server.responseTimeout,
             pureOf(
-              Response[F](Status.ServiceUnavailable).withEntity(
-                ErrorMessage(
-                  NonEmptyString.unsafeFrom(
-                    s"Response timed out after ${config.server.responseTimeout.toSeconds} seconds"
+              Response
+                .timeout[F]
+                .withEntity(
+                  ErrorMessage(
+                    NonEmptyString.unsafeFrom(
+                      s"Response timed out after ${config.server.responseTimeout.toSeconds} seconds"
+                    )
                   )
                 )
-              )
             ).someT,
           )(
             example.routes.ExamplesRoutes.allRoutes <+> GreetingRoutes.allRoutes[F](greeter)
