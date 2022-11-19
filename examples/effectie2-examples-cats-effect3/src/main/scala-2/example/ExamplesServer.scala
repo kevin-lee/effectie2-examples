@@ -73,7 +73,7 @@ object ExamplesServer {
                       .withPort(config.server.port.toPort)
                       .withHttp2
                       .withHttpApp(httpApp)
-                      .build >> Resource.eval(Async[F].never)
+                      .build *> Resource.eval(Async[F].never)
                   )
     } yield exitCode).drain
 }

@@ -20,7 +20,10 @@ updateOptions := updateOptions.value.withLatestSnapshots(true)
 lazy val effectieCe3 = subProject("cats-effect3")
   .settings(
     libraryDependencies ++= List(
+      libs.cats,
+      libs.catsEffect3,
       libs.newtype,
+      libs.kittens,
       libs.effect2Ce3,
       libs.loggerFCats,
       libs.loggerFLog4s,
@@ -43,8 +46,14 @@ lazy val props = new {
   val SonatypeCredentialHost = "s01.oss.sonatype.org"
   val SonatypeRepository     = s"https://$SonatypeCredentialHost/service/local"
 
+  val CatsVersion = "2.9.0"
+
+  val CatsEffect3Version = "3.4.1"
+
   val NewtypeVersion = "0.4.4"
   val RefinedVersion = "0.10.1"
+
+  val KittensVersion = "3.0.0"
 
   val Http4sVersion = "0.23.16"
 
@@ -68,6 +77,9 @@ lazy val props = new {
 
 lazy val libs = new {
 
+  lazy val cats        = "org.typelevel" %% "cats-core"   % props.CatsVersion
+  lazy val catsEffect3 = "org.typelevel" %% "cats-effect" % props.CatsEffect3Version
+
   lazy val newtype = "io.estatico" %% "newtype" % props.NewtypeVersion
 
   lazy val refined = List(
@@ -76,6 +88,8 @@ lazy val libs = new {
 //    "eu.timepit" %% "refined-eval"            % props.RefinedVersion,
     "eu.timepit" %% "refined-pureconfig" % props.RefinedVersion,
   )
+
+  lazy val kittens = "org.typelevel" %% "kittens" % props.KittensVersion
 
   lazy val effect2Ce = "io.kevinlee" %% "effectie-cats-effect" % props.Effectie2Version
 
