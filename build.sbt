@@ -58,12 +58,12 @@ lazy val props = new {
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta2"
-  val LoggerFVersion   = "2.0.0-beta2"
+  val Effectie2Version = "2.0.0-beta3"
+  val LoggerFVersion   = "2.0.0-beta3"
 
   val HedgehogVersion = "0.9.0"
 
-  val ExtrasVersion = "0.19.0"
+  val ExtrasVersion = "0.23.0"
 }
 
 lazy val libs = new {
@@ -110,9 +110,9 @@ lazy val libs = new {
   lazy val logback = "ch.qos.logback" % "logback-classic" % props.LogbackVersion % Runtime
   lazy val svmSubs = "org.scalameta" %% "svm-subs"        % props.SvmSubsVersion
 
-  lazy val extrasCats        = "io.kevinlee" %% "extras-cats"                  % props.ExtrasVersion
-  lazy val extrasRefinement  = "io.kevinlee" %% "extras-refinement"            % props.ExtrasVersion
-  lazy val extrasHedgehogCe3 = "io.kevinlee" %% "extras-hedgehog-cats-effect3" % props.ExtrasVersion % Test
+  lazy val extrasCats        = "io.kevinlee" %% "extras-cats"         % props.ExtrasVersion
+  lazy val extrasRefinement  = "io.kevinlee" %% "extras-refinement"   % props.ExtrasVersion
+  lazy val extrasHedgehogCe3 = "io.kevinlee" %% "extras-hedgehog-ce3" % props.ExtrasVersion % Test
 
   lazy val hedgehog = List(
     "qa.hedgehog" %% "hedgehog-core"   % props.HedgehogVersion,

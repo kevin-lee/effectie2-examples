@@ -31,7 +31,7 @@ object JokeRoutes {
       case GET -> Root / "test-client-timeout" =>
         jokes
           .testTimeout
-          .log(a => info(s">>> It finished without timeout: $a"))
+          .log(info(prefix(">>> It finished without timeout: ")))
           .flatMap(Ok(_))
           .recoverFromNonFatalWith {
             case err: java.util.concurrent.TimeoutException =>
