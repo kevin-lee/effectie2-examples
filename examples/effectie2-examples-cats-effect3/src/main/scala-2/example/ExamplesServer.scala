@@ -22,6 +22,8 @@ import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.middleware.{AutoSlash, Logger, Timeout}
 import org.http4s.syntax.all._
 
+import scala.concurrent.duration._
+
 /** @author Kevin Lee
   * @since 2022-01-30
   */
@@ -73,7 +75,8 @@ object ExamplesServer {
                       .withPort(config.server.port.toPort)
                       .withHttp2
                       .withHttpApp(httpApp)
-                      .build *> Resource.eval(Async[F].never)
+                      .withShutdownTimeout(1.second)
+                      .build >> Resource.eval(Async[F].never)
                   )
     } yield exitCode).drain
 }
