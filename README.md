@@ -45,6 +45,29 @@ http://localhost:8080/hello/World
 }
 ```
 
+#### with Curl
+```shell
+curl http://localhost:8080/hello/World
+```
+```shell
+{"message":"Hello, World"}
+```
+
+#### with httpie
+```shell
+http http://localhost:8080/hello/World
+```
+```shell
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 26
+Content-Type: application/json
+Date: Sat, 19 Nov 2022 08:40:37 GMT
+
+{
+    "message": "Hello, World"
+}
+```
 
 ### Greet
 Send a request with `curl`
