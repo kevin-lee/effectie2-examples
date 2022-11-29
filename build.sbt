@@ -33,6 +33,8 @@ lazy val effectieCe3 = subProject("cats-effect3")
       libs.extrasHedgehogCirce,
       libs.circeGeneric,
       libs.circeRefined,
+      libs.circeParser  % Test,
+      libs.circeLiteral % Test,
     ) ++
       libs.refined ++
       libs.http4s ++
@@ -115,6 +117,8 @@ lazy val libs = new {
   )
 
   lazy val circeGeneric = "io.circe" %% "circe-generic" % props.CirceVersion
+  lazy val circeParser  = "io.circe" %% "circe-parser"  % props.CirceVersion
+  lazy val circeLiteral = "io.circe" %% "circe-literal" % props.CirceVersion
   lazy val circeRefined = "io.circe" %% "circe-refined" % props.CirceVersion
 
   lazy val doobie = List(
@@ -127,9 +131,9 @@ lazy val libs = new {
   lazy val logback = "ch.qos.logback" % "logback-classic" % props.LogbackVersion % Runtime
   lazy val svmSubs = "org.scalameta" %% "svm-subs"        % props.SvmSubsVersion
 
-  lazy val extrasCats        = "io.kevinlee" %% "extras-cats"         % props.ExtrasVersion
-  lazy val extrasRefinement  = "io.kevinlee" %% "extras-refinement"   % props.ExtrasVersion
-  lazy val extrasHedgehogCe3 = "io.kevinlee" %% "extras-hedgehog-ce3" % props.ExtrasVersion % Test
+  lazy val extrasCats          = "io.kevinlee" %% "extras-cats"           % props.ExtrasVersion
+  lazy val extrasRefinement    = "io.kevinlee" %% "extras-refinement"     % props.ExtrasVersion
+  lazy val extrasHedgehogCe3   = "io.kevinlee" %% "extras-hedgehog-ce3"   % props.ExtrasVersion % Test
   lazy val extrasHedgehogCirce = "io.kevinlee" %% "extras-hedgehog-circe" % props.ExtrasVersion % Test
 
   lazy val hedgehog = List(
