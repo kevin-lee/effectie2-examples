@@ -1,6 +1,6 @@
 ThisBuild / organization := "io.kevinlee"
 ThisBuild / version      := "0.1.0-SNAPSHOT"
-ThisBuild / scalaVersion := "2.13.9"
+ThisBuild / scalaVersion := props.ScalaVersion
 
 lazy val effectieExamples = (project in file("."))
   .settings(
@@ -30,6 +30,7 @@ lazy val effectieCe3 = subProject("cats-effect3")
       libs.extrasCats,
       libs.extrasRefinement,
       libs.extrasHedgehogCe3,
+      libs.extrasHedgehogCirce,
       libs.circeGeneric,
       libs.circeRefined,
     ) ++
@@ -45,6 +46,8 @@ lazy val props = new {
 
   val SonatypeCredentialHost = "s01.oss.sonatype.org"
   val SonatypeRepository     = s"https://$SonatypeCredentialHost/service/local"
+
+  val ScalaVersion = "2.13.10"
 
   val CatsVersion = "2.9.0"
 
@@ -72,7 +75,7 @@ lazy val props = new {
 
   val HedgehogVersion = "0.9.0"
 
-  val ExtrasVersion = "0.23.0"
+  val ExtrasVersion = "0.25.0"
 }
 
 lazy val libs = new {
@@ -127,6 +130,7 @@ lazy val libs = new {
   lazy val extrasCats        = "io.kevinlee" %% "extras-cats"         % props.ExtrasVersion
   lazy val extrasRefinement  = "io.kevinlee" %% "extras-refinement"   % props.ExtrasVersion
   lazy val extrasHedgehogCe3 = "io.kevinlee" %% "extras-hedgehog-ce3" % props.ExtrasVersion % Test
+  lazy val extrasHedgehogCirce = "io.kevinlee" %% "extras-hedgehog-circe" % props.ExtrasVersion % Test
 
   lazy val hedgehog = List(
     "qa.hedgehog" %% "hedgehog-core"   % props.HedgehogVersion,
