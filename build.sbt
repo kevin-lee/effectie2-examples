@@ -75,9 +75,9 @@ lazy val props = new {
   val Effectie2Version = "2.0.0-beta3"
   val LoggerFVersion   = "2.0.0-beta3"
 
-  val HedgehogVersion = "0.9.0"
+  val HedgehogVersion = "0.10.1"
 
-  val ExtrasVersion = "0.25.0"
+  val ExtrasVersion = "0.26.0"
 }
 
 lazy val libs = new {
