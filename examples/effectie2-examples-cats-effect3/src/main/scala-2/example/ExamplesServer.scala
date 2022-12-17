@@ -72,7 +72,7 @@ object ExamplesServer {
                     EmberServerBuilder
                       .default[F]
                       .withHost(config.server.host)
-                      .withPort(config.server.port.toPort)
+                      .withPort(config.server.port.value)
                       .withHttp2
                       .withHttpApp(httpApp)
                       .withShutdownTimeout(1.second)
