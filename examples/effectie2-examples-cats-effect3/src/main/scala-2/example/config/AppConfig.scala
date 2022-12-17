@@ -3,9 +3,6 @@ package example.config
 import com.comcast.ip4s.{Hostname, Port}
 import effectie.core.Fx
 import effectie.syntax.all._
-import eu.timepit.refined.api.{Refined, RefinedTypeOps}
-import eu.timepit.refined.numeric._
-import eu.timepit.refined.pureconfig._
 import example.config.AppConfig.{JokesConfig, ServerConfig}
 import io.estatico.newtype.macros.newtype
 import org.http4s.Uri
@@ -33,18 +30,9 @@ object AppConfig {
     implicit val serverConfigConfigReader: ConfigReader[ServerConfig] = deriveReader
   }
 
-  @newtype case class PortNumber(value: PortNumber.Value)
+  @newtype case class PortNumber(value: Port)
   object PortNumber {
-    type Value = Int Refined Interval.Closed[0, 65535]
-    object Value extends RefinedTypeOps[Value, Int]
-
     implicit val portNumberConfigReader: ConfigReader[PortNumber] = deriving
-
-    implicit class PortNumberOps(private val portNumber: PortNumber) extends AnyVal {
-      def toPort: Port = Port
-        .fromInt(portNumber.value.value)
-        .getOrElse(sys.error(s"Invalid port number but it's impossible!!! ${portNumber.value.value.toString}"))
-    }
   }
 
   final case class JokesConfig(uri: JokesConfig.JokesUri, client: JokesConfig.ClientConfig)
