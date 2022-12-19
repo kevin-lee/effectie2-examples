@@ -77,6 +77,8 @@ lazy val props = new {
 
   val HedgehogVersion = "0.10.1"
 
+  val HedgehogExtraVersion = "0.1.0"
+
   val ExtrasVersion = "0.26.0"
 }
 
@@ -142,6 +144,11 @@ lazy val libs = new {
     "qa.hedgehog" %% "hedgehog-sbt"    % props.HedgehogVersion,
   )
     .map(_ % Test)
+
+  lazy val hedgehogExtra = List(
+    "io.kevinlee" %% "hedgehog-extra-core"    % props.HedgehogExtraVersion,
+    "io.kevinlee" %% "hedgehog-extra-refined" % props.HedgehogExtraVersion,
+  ).map(_ % Test)
 }
 
 def prefixName(name: String): String =
@@ -154,7 +161,7 @@ def subProject(projectName: String): Project = {
       name           := prefixedName,
       libraryDependencies ++= List(
         libs.logback,
-      ) ++ libs.hedgehog,
+      ) ++ libs.hedgehog ++ libs.hedgehogExtra,
       testFrameworks += new TestFramework("hedgehog.sbt.Framework"),
       updateOptions  := updateOptions.value.withLatestSnapshots(true),
       scalafixConfig := (
