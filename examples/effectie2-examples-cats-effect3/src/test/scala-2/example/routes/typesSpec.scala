@@ -1,8 +1,12 @@
 package example.routes
 
+import eu.timepit.refined.cats._
+import eu.timepit.refined.types.numeric.PosInt
 import extras.hedgehog.circe.RoundTripTester
 import hedgehog._
+import hedgehog.extra.refined._
 import hedgehog.runner._
+import io.circe.refined._
 
 /** @author Kevin Lee
   * @since 2022-11-29
@@ -15,14 +19,14 @@ object typesSpec extends Properties {
 
   def roundTripTestResult: Property =
     for {
-      message <- Gen.string(Gen.unicode, Range.linear(1, 100)).log("message")
+      message <- StringGens.genNonWhitespaceString(PosInt(100)).log("message")
     } yield {
       RoundTripTester(types.Result(message)).test()
     }
 
   def testJsonFormatResult: Property =
     for {
-      message <- Gen.string(Gen.unicode, Range.linear(1, 100)).log("message")
+      message <- StringGens.genNonWhitespaceString(PosInt(100)).log("message")
     } yield {
       import io.circe.literal._
 
