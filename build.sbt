@@ -72,8 +72,8 @@ lazy val props = new {
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta3"
-  val LoggerFVersion   = "2.0.0-beta3"
+  val Effectie2Version = "2.0.0-beta4"
+  val LoggerFVersion   = "2.0.0-beta4"
 
   val HedgehogVersion = "0.10.1"
 

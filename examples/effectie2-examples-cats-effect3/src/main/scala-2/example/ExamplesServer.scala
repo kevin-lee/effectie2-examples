@@ -65,7 +65,7 @@ object ExamplesServer {
       httpApp = Logger.httpApp(
                   logHeaders = true,
                   logBody = true,
-                  logAction = ((msg: String) => pureOf(msg).log(info).void).some
+                  logAction = ((msg: String) => msg.logS_(info)).some
                 )(allRoutes)
 
       exitCode <- Stream.resource(

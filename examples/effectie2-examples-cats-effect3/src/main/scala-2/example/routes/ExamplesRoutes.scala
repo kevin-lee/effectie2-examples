@@ -48,9 +48,9 @@ object ExamplesRoutes {
     HttpRoutes.of[F] {
       case GET -> Root / "test-server-timeout" =>
         import scala.concurrent.duration._
-        pureOf(">>> [test-server-timeout] Start to sleep for 30 seconds").log(infoA) *>
+        ">>> [test-server-timeout] Start to sleep for 30 seconds".logS(info) *>
           Temporal[F].sleep(30.seconds) *>
-          pureOf(">>> [test-server-timeout] Woke up from 30 second sleep").log(infoA) *>
+          ">>> [test-server-timeout] Woke up from 30 second sleep".logS(info) *>
           Ok("DONE")
     }
   }
@@ -60,9 +60,9 @@ object ExamplesRoutes {
     HttpRoutes.of[F] {
       case GET -> Root / "take-seconds" / IntVar(a) =>
         import scala.concurrent.duration._
-        pureOf(s">>> [take-seconds] Sleep for ${a.toString} seconds").log(infoA) *>
+        s">>> [take-seconds] Sleep for ${a.toString} seconds".logS_(info) *>
           Temporal[F].sleep(a.seconds) *>
-          pureOf(s">>> [take-seconds] Woke up from ${a.toString} second sleep").log(infoA) *>
+          s">>> [take-seconds] Woke up from ${a.toString} second sleep".logS_(info) *>
           Ok("DONE")
     }
   }
