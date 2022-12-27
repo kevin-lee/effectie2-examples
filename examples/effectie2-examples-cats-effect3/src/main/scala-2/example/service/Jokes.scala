@@ -12,7 +12,6 @@ import io.circe.generic.semiauto._
 import io.estatico.newtype.macros.newtype
 import loggerf.core._
 import loggerf.syntax.all._
-import loggerf.instances.show._
 import org.http4s.Method._
 import org.http4s.Uri
 import org.http4s.circe.CirceEntityCodec._
@@ -53,7 +52,6 @@ object Jokes {
   def apply[F[*]: Fx: Concurrent: Log](uri: JokesUri)(C: Client[F])(implicit dsl: Http4sClientDsl[F]): Jokes[F] =
     new Jokes[F] {
       import dsl._
-
       import org.http4s.syntax.all._
 
       def get: F[Either[Jokes.JokeError, Jokes.Joke]] =
@@ -63,7 +61,7 @@ object Jokes {
           }
 
       def testTimeout: F[String] =
-        pureOf(">>> Start test-timeout").log(infoA) >>
+        ">>> Start test-timeout".logS(info) *>
           C.expect[String](GET(uri"http://0.0.0.0:8080/take-seconds/30"))
 
     }
