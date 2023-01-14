@@ -6,6 +6,7 @@ import effectie.core._
 import effectie.syntax.all._
 import eu.timepit.refined.types.string.NonEmptyString
 import example.config.AppConfig
+import example.http4s.HttpClient
 import example.routes.types.ErrorMessage
 import example.routes.{GreetingRoutes, JokeRoutes}
 import example.service.{Greeter, Jokes}
@@ -38,8 +39,9 @@ object ExamplesServer {
                     .withHttp2
                     .build
                 )
-      greeter = Greeter[F]
-      jokes   = Jokes[F](Jokes.JokesUri.fromConfig(config.jokes))(client)
+      httpClient = HttpClient(client)
+      greeter    = Greeter[F]
+      jokes      = Jokes[F](Jokes.JokesUri.fromConfig(config.jokes))(httpClient)
 
       allRoutes = {
         AutoSlash(
