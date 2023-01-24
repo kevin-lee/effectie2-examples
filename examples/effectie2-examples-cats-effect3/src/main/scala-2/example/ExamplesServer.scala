@@ -67,8 +67,9 @@ object ExamplesServer {
       httpApp = Logger.httpApp(
                   logHeaders = true,
                   logBody = true,
-                  logAction = ((msg: String) => msg.logS_(info)).some
+                  logAction = ((msg: String) => msg.logS_(debug)).some
                 )(allRoutes)
+//      httpApp = allRoutes
 
       exitCode <- Stream.resource(
                     EmberServerBuilder
@@ -78,7 +79,7 @@ object ExamplesServer {
                       .withHttp2
                       .withHttpApp(httpApp)
                       .withShutdownTimeout(1.second)
-                      .build >> Resource.eval(Async[F].never)
+                      .build *> Resource.eval(Async[F].never)
                   )
     } yield exitCode).drain
 }

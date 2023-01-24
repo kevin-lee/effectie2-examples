@@ -2,6 +2,8 @@ ThisBuild / organization := "io.kevinlee"
 ThisBuild / version      := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := props.ScalaVersion
 
+ThisBuild / conflictManager := ConflictManager.strict
+
 lazy val effectieExamples = (project in file("."))
   .settings(
     name := props.ProjectName
@@ -19,27 +21,8 @@ updateOptions := updateOptions.value.withLatestSnapshots(true)
 
 lazy val effectieCe3 = subProject("cats-effect3")
   .settings(
-    libraryDependencies ++= List(
-      libs.cats,
-      libs.catsEffect3,
-      libs.newtype,
-      libs.kittens,
-      libs.effect2Ce3,
-      libs.loggerFCats,
-      libs.loggerFLog4s,
-      libs.extrasCats,
-      libs.extrasRefinement,
-      libs.extrasHedgehogCe3,
-      libs.extrasHedgehogCirce,
-      libs.circeGeneric,
-      libs.circeRefined,
-      libs.circeParser  % Test,
-      libs.circeLiteral % Test,
-    ) ++
-      libs.refined ++
-      libs.http4s ++
-      libs.doobie ++
-      libs.pureConfig
+    libraryDependencies ++= libs.all,
+    dependencyOverrides ++= libs.overrideAll,
   )
 
 lazy val props = new {
@@ -53,39 +36,62 @@ lazy val props = new {
 
   val CatsVersion = "2.9.0"
 
-  val CatsEffect3Version = "3.4.1"
+  val CatsEffect3Version = "3.4.5"
+
+  val Fs2Version = "3.3.0"
 
   val NewtypeVersion = "0.4.4"
   val RefinedVersion = "0.10.1"
 
   val KittensVersion = "3.0.0"
 
-  val Http4sVersion = "0.23.16"
+  val Http4sVersion = "0.23.18"
 
-  val PureConfigVersion = "0.17.1"
+  val PureConfigVersion = "0.17.2"
 
   val CirceVersion = "0.14.3"
 
   val DoobieVersion = "1.0.0-RC2"
 
+  val ShapelessVersion = "2.3.10"
+
+  val Ip4sCoreVersion = "3.2.0"
+
   val LogbackVersion = "1.4.1"
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta4"
-  val LoggerFVersion   = "2.0.0-beta4"
+  val Effectie2Version = "2.0.0-beta5"
+  val LoggerFVersion   = "2.0.0-beta6"
 
   val HedgehogVersion = "0.10.1"
 
-  val HedgehogExtraVersion = "0.1.0"
+  val HedgehogExtraVersion = "0.2.0"
 
-  val ExtrasVersion = "0.26.0"
+  val ExtrasVersion = "0.27.0"
+
+  val Slf4jApiVersion = "2.0.6"
 }
 
 lazy val libs = new {
 
-  lazy val cats        = "org.typelevel" %% "cats-core"   % props.CatsVersion
-  lazy val catsEffect3 = "org.typelevel" %% "cats-effect" % props.CatsEffect3Version
+  lazy val catsCore = "org.typelevel" %% "cats-core" % props.CatsVersion
+  lazy val catsFree = "org.typelevel" %% "cats-free" % props.CatsVersion
+  lazy val catsAll  = List(
+    catsCore,
+    catsFree
+  )
+
+  lazy val catsEffect3       = "org.typelevel" %% "cats-effect"        % props.CatsEffect3Version
+  lazy val catsEffect3Kernel = "org.typelevel" %% "cats-effect-kernel" % props.CatsEffect3Version
+  lazy val catsEffect3Std    = "org.typelevel" %% "cats-effect-std"    % props.CatsEffect3Version
+  lazy val catsEffect3All    = List(
+    catsEffect3,
+    catsEffect3Kernel,
+    catsEffect3Std
+  )
+
+  lazy val fs2Core = "co.fs2" %% "fs2-core" % props.Fs2Version
 
   lazy val newtype = "io.estatico" %% "newtype" % props.NewtypeVersion
 
@@ -98,14 +104,16 @@ lazy val libs = new {
 
   lazy val kittens = "org.typelevel" %% "kittens" % props.KittensVersion
 
-  lazy val effect2Ce = "io.kevinlee" %% "effectie-cats-effect" % props.Effectie2Version
+  lazy val effectie2Ce = "io.kevinlee" %% "effectie-cats-effect" % props.Effectie2Version
 
-  lazy val effect2Ce3 = "io.kevinlee" %% "effectie-cats-effect3" % props.Effectie2Version
+  lazy val effectie2Ce3 = "io.kevinlee" %% "effectie-cats-effect3" % props.Effectie2Version
 
   lazy val loggerFCats  = "io.kevinlee" %% "logger-f-cats"  % props.LoggerFVersion
   lazy val loggerFLog4s = "io.kevinlee" %% "logger-f-log4s" % props.LoggerFVersion
+  lazy val loggerFSlf4J = "io.kevinlee" %% "logger-f-slf4j" % props.LoggerFVersion
 
   lazy val http4s = List(
+    "org.http4s" %% "http4s-core"         % props.Http4sVersion,
     "org.http4s" %% "http4s-ember-server" % props.Http4sVersion,
     "org.http4s" %% "http4s-ember-client" % props.Http4sVersion,
     "org.http4s" %% "http4s-circe"        % props.Http4sVersion,
@@ -114,14 +122,23 @@ lazy val libs = new {
 
   lazy val pureConfig = List(
     "com.github.pureconfig" %% "pureconfig"        % props.PureConfigVersion,
+    "com.github.pureconfig" %% "pureconfig-core"   % props.PureConfigVersion,
     "com.github.pureconfig" %% "pureconfig-http4s" % props.PureConfigVersion,
     "com.github.pureconfig" %% "pureconfig-ip4s"   % props.PureConfigVersion,
   )
 
+  lazy val circeCore    = "io.circe" %% "circe-core"    % props.CirceVersion
   lazy val circeGeneric = "io.circe" %% "circe-generic" % props.CirceVersion
   lazy val circeParser  = "io.circe" %% "circe-parser"  % props.CirceVersion
   lazy val circeLiteral = "io.circe" %% "circe-literal" % props.CirceVersion
   lazy val circeRefined = "io.circe" %% "circe-refined" % props.CirceVersion
+  lazy val circeAll     = List(
+    circeCore,
+    circeGeneric,
+    circeRefined,
+    circeParser  % Test,
+    circeLiteral % Test,
+  )
 
   lazy val doobie = List(
     "org.tpolecat" %% "doobie-core"   % props.DoobieVersion,
@@ -130,6 +147,10 @@ lazy val libs = new {
     "org.tpolecat" %% "doobie-specs2" % props.DoobieVersion
   )
 
+  lazy val shapeless = "com.chuusai" %% "shapeless" % props.ShapelessVersion
+
+  lazy val ip4sCore = "com.comcast" %% "ip4s-core" % props.Ip4sCoreVersion
+
   lazy val logback = "ch.qos.logback" % "logback-classic" % props.LogbackVersion % Runtime
   lazy val svmSubs = "org.scalameta" %% "svm-subs"        % props.SvmSubsVersion
 
@@ -137,6 +158,8 @@ lazy val libs = new {
   lazy val extrasRefinement    = "io.kevinlee" %% "extras-refinement"     % props.ExtrasVersion
   lazy val extrasHedgehogCe3   = "io.kevinlee" %% "extras-hedgehog-ce3"   % props.ExtrasVersion % Test
   lazy val extrasHedgehogCirce = "io.kevinlee" %% "extras-hedgehog-circe" % props.ExtrasVersion % Test
+
+  lazy val slf4jApi = "org.slf4j" % "slf4j-api" % props.Slf4jApiVersion
 
   lazy val hedgehog = List(
     "qa.hedgehog" %% "hedgehog-core"   % props.HedgehogVersion,
@@ -149,6 +172,32 @@ lazy val libs = new {
     "io.kevinlee" %% "hedgehog-extra-core"    % props.HedgehogExtraVersion,
     "io.kevinlee" %% "hedgehog-extra-refined" % props.HedgehogExtraVersion,
   ).map(_ % Test)
+
+  lazy val all = List(
+    fs2Core,
+    newtype,
+    kittens,
+    effectie2Ce3,
+    loggerFCats,
+    loggerFLog4s,
+    loggerFSlf4J,
+    extrasCats,
+    extrasRefinement,
+    extrasHedgehogCe3,
+    extrasHedgehogCirce,
+    shapeless,
+    ip4sCore,
+    slf4jApi,
+  ) ++
+    catsAll ++
+    catsEffect3All ++
+    circeAll ++
+    refined ++
+    http4s ++
+    doobie ++
+    pureConfig
+
+  lazy val overrideAll = all ++ hedgehog
 }
 
 def prefixName(name: String): String =

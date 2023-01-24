@@ -14,7 +14,8 @@ import org.http4s.dsl.Http4sDsl
   * @since 2022-01-30
   */
 object MainApp extends IOApp {
-  implicit val canLog: CanLog = Log4sLogger.log4sCanLog[MainApp.type]
+  implicit val canLog: CanLog = Log4sLogger.log4sCanLog("example-app")
+//  implicit val canLog: CanLog = Slf4JLogger.slf4JCanLog("example-app")
 
   implicit val dsl: Http4sDsl[IO]             = org.http4s.dsl.io
   implicit val clientDsl: Http4sClientDsl[IO] = org.http4s.client.dsl.io
