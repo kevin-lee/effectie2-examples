@@ -4,7 +4,6 @@ import cats.effect._
 import cats.syntax.all._
 import effectie.core.Fx
 import effectie.syntax.all._
-import fs2.text
 import io.circe.Decoder
 import org.http4s.Status.{Successful => H4sSuccessful}
 import org.http4s._
@@ -82,21 +81,6 @@ object HttpClient {
       }
     }
 
-  }
-
-  def bodyToUtf8String[F[*]: Concurrent](
-    response: Response[F],
-  ): F[Option[String]] = {
-    Option
-      .when(response.status.isEntityAllowed)(
-        response
-          .body
-          .through(text.utf8.decode)
-          .through(text.lines)
-          .compile[F, F, String]
-          .string
-      )
-      .sequence
   }
 
 }

@@ -14,7 +14,7 @@ object Example {
   def add[F[*]: Fx](a: Int, b: Int): F[Int] = pureOf(a + b)
 
   def divide[F[*]: Fx: Monad](a: Int, b: Int): F[Either[ExampleError, Int]] =
-    effectOf(a / b)
+    pureOrError(a / b)
       .map(_.asRight[ExampleError])
       .recoverFromNonFatal {
         case _: ArithmeticException =>
