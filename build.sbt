@@ -68,7 +68,7 @@ lazy val props = new {
 
   val HedgehogExtraVersion = "0.2.0"
 
-  val ExtrasVersion = "0.27.0"
+  val ExtrasVersion = "0.28.0"
 
   val Slf4jApiVersion = "2.0.6"
 }
@@ -156,8 +156,20 @@ lazy val libs = new {
 
   lazy val extrasCats          = "io.kevinlee" %% "extras-cats"           % props.ExtrasVersion
   lazy val extrasRefinement    = "io.kevinlee" %% "extras-refinement"     % props.ExtrasVersion
+  lazy val extrasTypeInfo      = "io.kevinlee" %% "extras-type-info"      % props.ExtrasVersion
+  lazy val extrasRender        = "io.kevinlee" %% "extras-render"         % props.ExtrasVersion
+  lazy val extrasFs2V3Text     = "io.kevinlee" %% "extras-fs2-v3-text"    % props.ExtrasVersion
   lazy val extrasHedgehogCe3   = "io.kevinlee" %% "extras-hedgehog-ce3"   % props.ExtrasVersion % Test
   lazy val extrasHedgehogCirce = "io.kevinlee" %% "extras-hedgehog-circe" % props.ExtrasVersion % Test
+  lazy val extrasAll           = List(
+    extrasCats,
+    extrasRefinement,
+    extrasTypeInfo,
+    extrasRender,
+    extrasFs2V3Text,
+    extrasHedgehogCe3,
+    extrasHedgehogCirce
+  )
 
   lazy val slf4jApi = "org.slf4j" % "slf4j-api" % props.Slf4jApiVersion
 
@@ -181,14 +193,11 @@ lazy val libs = new {
     loggerFCats,
     loggerFLog4s,
     loggerFSlf4J,
-    extrasCats,
-    extrasRefinement,
-    extrasHedgehogCe3,
-    extrasHedgehogCirce,
     shapeless,
     ip4sCore,
     slf4jApi,
   ) ++
+    extrasAll ++
     catsAll ++
     catsEffect3All ++
     circeAll ++
