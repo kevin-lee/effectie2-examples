@@ -36,9 +36,11 @@ lazy val props = new {
 
   val CatsVersion = "2.9.0"
 
-  val CatsEffect3Version = "3.4.5"
+  val CatsEffect3Version = "3.4.7"
 
-  val Fs2Version = "3.3.0"
+  val Fs2Version = "3.6.1"
+
+  val ScodecBits = "1.1.35"
 
   val NewtypeVersion = "0.4.4"
   val RefinedVersion = "0.10.1"
@@ -61,14 +63,14 @@ lazy val props = new {
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta5"
-  val LoggerFVersion   = "2.0.0-beta6"
+  val Effectie2Version = "2.0.0-beta6"
+  val LoggerFVersion   = "2.0.0-beta9"
 
   val HedgehogVersion = "0.10.1"
 
-  val HedgehogExtraVersion = "0.2.0"
+  val HedgehogExtraVersion = "0.3.0"
 
-  val ExtrasVersion = "0.28.0"
+  val ExtrasVersion = "0.31.0"
 
   val Slf4jApiVersion = "2.0.6"
 }
@@ -92,6 +94,8 @@ lazy val libs = new {
   )
 
   lazy val fs2Core = "co.fs2" %% "fs2-core" % props.Fs2Version
+
+  lazy val scodecBits = "org.scodec" %% "scodec-bits" % props.ScodecBits
 
   lazy val newtype = "io.estatico" %% "newtype" % props.NewtypeVersion
 
@@ -187,6 +191,7 @@ lazy val libs = new {
 
   lazy val all = List(
     fs2Core,
+    scodecBits,
     newtype,
     kittens,
     effectie2Ce3,
