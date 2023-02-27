@@ -36,7 +36,7 @@ lazy val props = new {
 
   val CatsVersion = "2.9.0"
 
-  val CatsEffect3Version = "3.4.7"
+  val CatsEffect3Version = "3.4.8"
 
   val Fs2Version = "3.6.1"
 
@@ -63,14 +63,14 @@ lazy val props = new {
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta6"
-  val LoggerFVersion   = "2.0.0-beta9"
+  val Effectie2Version = "2.0.0-beta7"
+  val LoggerFVersion   = "2.0.0-beta10"
 
   val HedgehogVersion = "0.10.1"
 
   val HedgehogExtraVersion = "0.3.0"
 
-  val ExtrasVersion = "0.31.0"
+  val ExtrasVersion = "0.32.0"
 
   val Slf4jApiVersion = "2.0.6"
 }
