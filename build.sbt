@@ -2,7 +2,8 @@ ThisBuild / organization := "io.kevinlee"
 ThisBuild / version      := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := props.ScalaVersion
 
-ThisBuild / conflictManager := ConflictManager.strict
+// ConflictManager.strict doesn't work well with IntelliJ IDEA's Scala plugin
+//ThisBuild / conflictManager := ConflictManager.strict
 
 lazy val effectieExamples = (project in file("."))
   .settings(
@@ -63,14 +64,14 @@ lazy val props = new {
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta7"
-  val LoggerFVersion   = "2.0.0-beta10"
+  val Effectie2Version = "2.0.0-beta8"
+  val LoggerFVersion   = "2.0.0-beta11"
 
   val HedgehogVersion = "0.10.1"
 
   val HedgehogExtraVersion = "0.3.0"
 
-  val ExtrasVersion = "0.33.0"
+  val ExtrasVersion = "0.36.0"
 
   val Slf4jApiVersion = "2.0.6"
 }
