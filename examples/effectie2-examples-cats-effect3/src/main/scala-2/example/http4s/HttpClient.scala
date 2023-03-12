@@ -41,7 +41,10 @@ object HttpClient {
       } else request
       sendAndHandle(theRequest) {
         case HttpResponse.Successful(res) =>
-          entityDecoder.decode(res, strict = false).leftWiden[Throwable].rethrowT
+          entityDecoder
+            .decode(res, strict = false)
+            .leftMap(HttpError.decodingError[F](theRequest, _))
+            .rethrowT
         case HttpResponse.Failed(res) =>
           errorOf[F](UnexpectedStatus(res.status, request.method, request.uri))
       }
@@ -53,6 +56,11 @@ object HttpClient {
     override def sendAndHandle[A](request: Request[F])(handler: HttpResponse[F] => F[A]): F[A] =
       client
         .run(request)
+        .handleErrorWith { (err: Throwable) =>
+          HttpError
+            .fromHttp4sException(err, request)
+            .fold(Resource.eval[F, Response[F]](errorOf(err)))(e => Resource.eval(errorOf(e)))
+        }
         .use(response => handler(HttpResponse.fromHttp4s[F](response)))
 
     override def sendWithAndHandle[A](request: F[Request[F]])(handler: HttpResponse[F] => F[A]): F[A] =
