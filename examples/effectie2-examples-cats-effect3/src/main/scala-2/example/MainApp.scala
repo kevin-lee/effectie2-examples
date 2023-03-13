@@ -7,8 +7,6 @@ import example.config.AppConfig
 import extras.cats.syntax.all._
 import loggerf.instances.cats._
 import loggerf.logger._
-import org.http4s.client.dsl.Http4sClientDsl
-import org.http4s.dsl.Http4sDsl
 
 /** @author Kevin Lee
   * @since 2022-01-30
@@ -17,18 +15,11 @@ object MainApp extends IOApp {
   implicit val canLog: CanLog = Log4sLogger.log4sCanLog("example-app")
 //  implicit val canLog: CanLog = Slf4JLogger.slf4JCanLog("example-app")
 
-  implicit val dsl: Http4sDsl[IO]             = org.http4s.dsl.io
-  implicit val clientDsl: Http4sClientDsl[IO] = org.http4s.client.dsl.io
-
   def run(args: List[String]): IO[ExitCode] =
     for {
       config   <- AppConfig
                     .load[IO]
-                    .eitherT
-                    .foldF(
-                      err => IO.raiseError[AppConfig](new RuntimeException(err.prettyPrint(2))),
-                      _.pure[IO]
-                    )
+                    .innerFoldF(err => IO.raiseError(new RuntimeException(err.prettyPrint(2))))(_.pure[IO])
       exitCode <- ExamplesServer
                     .stream[IO](config)
                     .compile

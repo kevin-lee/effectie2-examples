@@ -50,12 +50,10 @@ object Jokes {
     def fromConfig(jokesConfig: JokesConfig): JokesUri = JokesUri(jokesConfig.uri.value)
   }
 
-  def apply[F[*]: Fx: Concurrent: Log](uri: JokesUri)(C: HttpClient[F])(implicit dsl: Http4sClientDsl[F]): Jokes[F] =
-    new JokesF[F](uri)(C)
+  def apply[F[*]: Fx: Concurrent: Log](uri: JokesUri)(C: HttpClient[F]): Jokes[F] = new JokesF[F](uri)(C)
 
-  private final class JokesF[F[*]: Fx: Concurrent: Log](uri: JokesUri)(C: HttpClient[F])(
-    implicit dsl: Http4sClientDsl[F]
-  ) extends Jokes[F] {
+  private final class JokesF[F[*]: Fx: Concurrent: Log](uri: JokesUri)(C: HttpClient[F]) extends Jokes[F] {
+    private val dsl: Http4sClientDsl[F] = Http4sClientDsl[F]
     import dsl._
     import org.http4s.syntax.all._
 

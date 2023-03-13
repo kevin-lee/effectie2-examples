@@ -19,7 +19,7 @@ import org.http4s.dsl.Http4sDsl
   */
 object ExamplesRoutesSpec extends Properties with CatsEffectRunner {
   type F[A] = IO[A]
-  val F = IO
+  private val F = IO
 
   override val tests: List[Test] = List(
     property("test Greeter.hello returns status code 200", testGreeterReturnsStatusCode200),
