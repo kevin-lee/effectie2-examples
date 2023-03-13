@@ -16,7 +16,6 @@ import loggerf.core._
 import loggerf.syntax.all._
 import org.http4s.Response
 import org.http4s.circe.CirceEntityCodec._
-import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.dsl.Http4sDsl
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.ember.server.EmberServerBuilder
@@ -30,7 +29,7 @@ import scala.concurrent.duration._
   */
 object ExamplesServer {
 
-  def stream[F[*]: Fx: Log: Async: Http4sDsl: Http4sClientDsl: Temporal](config: AppConfig): Stream[F, Nothing] =
+  def stream[F[*]: Fx: Log: Async: Temporal](config: AppConfig): Stream[F, Nothing] =
     (for {
       client <- Stream.resource(
                   EmberClientBuilder
@@ -44,6 +43,7 @@ object ExamplesServer {
       jokes      = Jokes[F](Jokes.JokesUri.fromConfig(config.jokes))(httpClient)
 
       allRoutes = {
+        implicit val http4sDsl = Http4sDsl[F]
         AutoSlash(
           Timeout(
             config.server.responseTimeout,
