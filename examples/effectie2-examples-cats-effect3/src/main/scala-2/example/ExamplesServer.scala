@@ -35,6 +35,7 @@ object ExamplesServer {
                   EmberClientBuilder
                     .default[F]
                     .withTimeout(config.jokes.client.requestTimeout)
+                    .withIdleConnectionTime(config.jokes.client.requestTimeout)
                     .withHttp2
                     .build
                 )
