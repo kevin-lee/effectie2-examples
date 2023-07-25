@@ -11,7 +11,7 @@ import example.routes.types.ErrorMessage
 import example.routes.{GreetingRoutes, JokeRoutes}
 import example.service.{Greeter, Jokes}
 import extras.cats.syntax.option._
-import fs2.Stream
+import fs2.io.net.Network
 import loggerf.core._
 import loggerf.syntax.all._
 import org.http4s.Response
@@ -29,58 +29,62 @@ import scala.concurrent.duration._
   */
 object ExamplesServer {
 
-  def stream[F[*]: Fx: Log: Async: Temporal](config: AppConfig): Stream[F, Nothing] =
-    (for {
-      client <- Stream.resource(
-                  EmberClientBuilder
-                    .default[F]
-                    .withTimeout(config.jokes.client.requestTimeout)
-                    .withIdleConnectionTime(config.jokes.client.requestTimeout)
-                    .withHttp2
-                    .build
-                )
-      httpClient = HttpClient(client)
-      greeter    = Greeter[F]
-      jokes      = Jokes[F](Jokes.JokesUri.fromConfig(config.jokes))(httpClient)
+  def start[F[*]: Fx: Log: Async: Network: Temporal](config: AppConfig): F[ExitCode] =
+    EmberClientBuilder
+      .default[F]
+      .withTimeout(config.jokes.client.requestTimeout)
+      .withIdleConnectionTime(config.jokes.client.requestTimeout)
+      .withHttp2
+      .build
+      .use { client =>
+        val httpClient = HttpClient(client)
+        val greeter    = Greeter[F]
+        val jokes      = Jokes[F](Jokes.JokesUri.fromConfig(config.jokes))(httpClient)
 
-      allRoutes = {
-        implicit val http4sDsl = Http4sDsl[F]
-        AutoSlash(
-          Timeout(
-            config.server.responseTimeout,
-            pureOf(
-              Response
-                .timeout[F]
-                .withEntity(
-                  ErrorMessage(
-                    NonEmptyString.unsafeFrom(
-                      s"Response timed out after ${config.server.responseTimeout.toSeconds} seconds"
+        val allRoutes = {
+          implicit val http4sDsl = Http4sDsl[F]
+          AutoSlash(
+            Timeout(
+              config.server.responseTimeout,
+              pureOf(
+                Response
+                  .timeout[F]
+                  .withEntity(
+                    ErrorMessage(
+                      NonEmptyString.unsafeFrom(
+                        s"Response timed out after ${config.server.responseTimeout.toSeconds} seconds"
+                      )
                     )
                   )
-                )
-            ).someT,
-          )(
-            example.routes.ExamplesRoutes.allRoutes <+> GreetingRoutes.allRoutes[F](greeter)
-          ) <+> JokeRoutes.jokeRoutes[F](jokes) <+> example.routes.ExamplesRoutes.takeSecondsRoutes
-        ).orNotFound
+              ).someT,
+            )(
+              example.routes.ExamplesRoutes.allRoutes <+> GreetingRoutes.allRoutes[F](greeter)
+            ) <+> JokeRoutes.jokeRoutes[F](jokes) <+> example.routes.ExamplesRoutes.takeSecondsRoutes
+          ).orNotFound
+        }
+
+        val httpApp = Logger.httpApp(
+          logHeaders = true,
+          logBody = true,
+          logAction = ((msg: String) => msg.logS_(debug)).some
+        )(allRoutes)
+        //      httpApp = allRoutes
+        EmberServerBuilder
+          .default[F]
+          .withHost(config.server.host)
+          .withPort(config.server.port.value)
+          .withHttp2
+          .withHttpApp(httpApp)
+          .withShutdownTimeout(1.second)
+          .build
+          .use(_ => Async[F].never[Unit])
       }
+      .redeemWith(
+        { err =>
+          logS_(s">>> The app crashed due to ${err.getMessage}")(error) *>
+            pureOf(ExitCode.Error)
+        },
+        _ => pureOf(ExitCode.Success)
+      )
 
-      httpApp = Logger.httpApp(
-                  logHeaders = true,
-                  logBody = true,
-                  logAction = ((msg: String) => msg.logS_(debug)).some
-                )(allRoutes)
-//      httpApp = allRoutes
-
-      exitCode <- Stream.resource(
-                    EmberServerBuilder
-                      .default[F]
-                      .withHost(config.server.host)
-                      .withPort(config.server.port.value)
-                      .withHttp2
-                      .withHttpApp(httpApp)
-                      .withShutdownTimeout(1.second)
-                      .build *> Resource.eval(Async[F].never)
-                  )
-    } yield exitCode).drain
 }
