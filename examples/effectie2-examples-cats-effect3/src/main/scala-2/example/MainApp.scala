@@ -12,18 +12,14 @@ import loggerf.logger._
   * @since 2022-01-30
   */
 object MainApp extends IOApp {
-  implicit val canLog: CanLog = Log4sLogger.log4sCanLog("example-app")
-//  implicit val canLog: CanLog = Slf4JLogger.slf4JCanLog("example-app")
+//  implicit val canLog: CanLog = Log4sLogger.log4sCanLog("example-app")
+  implicit val canLog: CanLog = Slf4JLogger.slf4JCanLog("example-app")
 
   def run(args: List[String]): IO[ExitCode] =
     for {
       config   <- AppConfig
                     .load[IO]
                     .innerFoldF(err => IO.raiseError(new RuntimeException(err.prettyPrint(2))))(_.pure[IO])
-      exitCode <- ExamplesServer
-                    .stream[IO](config)
-                    .compile
-                    .drain
-                    .as(ExitCode.Success)
+      exitCode <- ExamplesServer.start[IO](config)
     } yield exitCode
 }

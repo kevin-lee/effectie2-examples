@@ -1,5 +1,5 @@
 ThisBuild / organization := "io.kevinlee"
-ThisBuild / version      := "0.1.0-SNAPSHOT"
+ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := props.ScalaVersion
 
 // ConflictManager.strict doesn't work well with IntelliJ IDEA's Scala plugin
@@ -33,39 +33,39 @@ lazy val props = new {
   val SonatypeCredentialHost = "s01.oss.sonatype.org"
   val SonatypeRepository     = s"https://$SonatypeCredentialHost/service/local"
 
-  val ScalaVersion = "2.13.10"
+  val ScalaVersion = "2.13.11"
 
   val CatsVersion = "2.9.0"
 
-  val CatsEffect3Version = "3.4.8"
+  val CatsEffect3Version = "3.5.1"
 
-  val Fs2Version = "3.6.1"
+  val Fs2Version = "3.7.0"
 
-  val ScodecBits = "1.1.35"
+  val ScodecBits = "1.1.37"
 
   val NewtypeVersion = "0.4.4"
-  val RefinedVersion = "0.10.1"
+  val RefinedVersion = "0.11.0"
 
   val KittensVersion = "3.0.0"
 
-  val Http4sVersion = "0.23.18"
+  val Http4sVersion = "0.23.23"
 
-  val PureConfigVersion = "0.17.2"
+  val PureConfigVersion = "0.17.4"
 
-  val CirceVersion = "0.14.3"
+  val CirceVersion = "0.14.5"
 
-  val DoobieVersion = "1.0.0-RC2"
+  val DoobieVersion = "1.0.0-RC4"
 
   val ShapelessVersion = "2.3.10"
 
-  val Ip4sCoreVersion = "3.2.0"
+  val Ip4sCoreVersion = "3.3.0"
 
-  val LogbackVersion = "1.4.1"
+  val LogbackVersion = "1.4.8"
 
   val SvmSubsVersion = "20.2.0"
 
-  val Effectie2Version = "2.0.0-beta9"
-  val LoggerFVersion   = "2.0.0-beta12"
+  val Effectie2Version = "2.0.0-beta11"
+  val LoggerFVersion   = "2.0.0-beta17"
 
   val HedgehogVersion = "0.10.1"
 
@@ -73,7 +73,9 @@ lazy val props = new {
 
   val ExtrasVersion = "0.39.0"
 
-  val Slf4jApiVersion = "2.0.6"
+  val Slf4jApiVersion = "2.0.7"
+
+  val EmbeddedPostgresVersion = "2.0.4"
 }
 
 lazy val libs = new {
@@ -163,6 +165,7 @@ lazy val libs = new {
   lazy val extrasRefinement    = "io.kevinlee" %% "extras-refinement"     % props.ExtrasVersion
   lazy val extrasTypeInfo      = "io.kevinlee" %% "extras-type-info"      % props.ExtrasVersion
   lazy val extrasRender        = "io.kevinlee" %% "extras-render"         % props.ExtrasVersion
+  lazy val extrasRenderRefined = "io.kevinlee" %% "extras-render-refined" % props.ExtrasVersion
   lazy val extrasFs2V3Text     = "io.kevinlee" %% "extras-fs2-v3-text"    % props.ExtrasVersion
   lazy val extrasHedgehogCe3   = "io.kevinlee" %% "extras-hedgehog-ce3"   % props.ExtrasVersion % Test
   lazy val extrasHedgehogCirce = "io.kevinlee" %% "extras-hedgehog-circe" % props.ExtrasVersion % Test
@@ -171,12 +174,15 @@ lazy val libs = new {
     extrasRefinement,
     extrasTypeInfo,
     extrasRender,
+    extrasRenderRefined,
     extrasFs2V3Text,
     extrasHedgehogCe3,
     extrasHedgehogCirce
   )
 
   lazy val slf4jApi = "org.slf4j" % "slf4j-api" % props.Slf4jApiVersion
+
+  lazy val embeddedPostgres = "io.zonky.test" % "embedded-postgres" % props.EmbeddedPostgresVersion
 
   lazy val hedgehog = List(
     "qa.hedgehog" %% "hedgehog-core"   % props.HedgehogVersion,
@@ -202,6 +208,7 @@ lazy val libs = new {
     shapeless,
     ip4sCore,
     slf4jApi,
+    embeddedPostgres,
   ) ++
     extrasAll ++
     catsAll ++
@@ -222,12 +229,12 @@ def subProject(projectName: String): Project = {
   val prefixedName = prefixName(projectName)
   Project(prefixedName, file(s"examples/$prefixedName"))
     .settings(
-      name           := prefixedName,
+      name := prefixedName,
       libraryDependencies ++= List(
         libs.logback,
       ) ++ libs.hedgehog ++ libs.hedgehogExtra,
       testFrameworks += new TestFramework("hedgehog.sbt.Framework"),
-      updateOptions  := updateOptions.value.withLatestSnapshots(true),
+      updateOptions := updateOptions.value.withLatestSnapshots(true),
       scalafixConfig := (
         if (scalaVersion.value.startsWith("3"))
           ((ThisBuild / baseDirectory).value / ".scalafix-scala3.conf").some
