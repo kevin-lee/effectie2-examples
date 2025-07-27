@@ -29,7 +29,7 @@ import scala.concurrent.duration._
   */
 object ExamplesServer {
 
-  def start[F[*]: Fx: Log: Async: Network: Temporal](config: AppConfig): F[ExitCode] =
+  def start[F[*]: Fx: Log: Async: Network](config: AppConfig): F[ExitCode] =
     EmberClientBuilder
       .default[F]
       .withTimeout(config.jokes.client.requestTimeout)

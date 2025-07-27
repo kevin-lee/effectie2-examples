@@ -1,6 +1,5 @@
 package example.routes
 
-import cats.Monad
 import cats.effect._
 import effectie.core._
 import eu.timepit.refined.types.string.NonEmptyString
@@ -19,7 +18,7 @@ import org.http4s.dsl.Http4sDsl
   */
 object ExamplesRoutesSpec extends Properties with CatsEffectRunner {
   type F[A] = IO[A]
-  private val F = IO
+  val F = IO
 
   override val tests: List[Test] = List(
     property("test Greeter.hello returns status code 200", testGreeterReturnsStatusCode200),
@@ -105,13 +104,13 @@ object ExamplesRoutesSpec extends Properties with CatsEffectRunner {
       actual.completeThen(message => message ==== expected)
     }
 
-  private[this] def helloWorld[G[*]: Fx: Log: Monad: Http4sDsl: Temporal](name: Greeter.Name): G[Response[G]] = {
+  private[this] def helloWorld[G[*]: Fx: Log: Http4sDsl: Temporal](name: Greeter.Name): G[Response[G]] = {
     val getHW   = Request[G](Method.GET, Uri.unsafeFromString(s"/hello/${name.value}"))
     val greeter = Greeter[G]
     GreetingRoutes.helloWorldRoutes(greeter).orNotFound(getHW)
   }
 
-  private[this] def greet[G[*]: Fx: Monad: Http4sDsl: Temporal](
+  private[this] def greet[G[*]: Fx: Http4sDsl: Temporal](
     message: Greeter.GreetingMessage,
     name: Greeter.Name
   ): G[Response[G]] = {
