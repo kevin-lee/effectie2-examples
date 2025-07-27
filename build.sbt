@@ -69,7 +69,7 @@ lazy val props = new {
 
   val HedgehogVersion = "0.10.1"
 
-  val HedgehogExtraVersion = "0.7.0"
+  val HedgehogExtraVersion = "0.11.0"
 
   val ExtrasVersion = "0.46.1"
 
