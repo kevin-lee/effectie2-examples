@@ -30,7 +30,7 @@ object ExamplesRoutes {
     }
   }
 
-  def divideRoutes[F[*]: Fx: Log: Monad](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
+  def divideRoutes[F[*]: Fx: Monad](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
     import dsl._
     HttpRoutes.of[F] {
       case GET -> Root / "divide" / IntVar(a) / IntVar(b) =>
@@ -43,7 +43,7 @@ object ExamplesRoutes {
     }
   }
 
-  def timeoutRoutes[F[*]: Fx: Log: Monad: Temporal](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
+  def timeoutRoutes[F[*]: Log: Temporal](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
     import dsl._
     HttpRoutes.of[F] {
       case GET -> Root / "test-server-timeout" =>
@@ -55,7 +55,7 @@ object ExamplesRoutes {
     }
   }
 
-  def takeSecondsRoutes[F[*]: Fx: Monad: Log: Temporal](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
+  def takeSecondsRoutes[F[*]: Log: Temporal](implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
     import dsl._
     HttpRoutes.of[F] {
       case GET -> Root / "take-seconds" / IntVar(a) =>
@@ -67,7 +67,7 @@ object ExamplesRoutes {
     }
   }
 
-  def allRoutes[F[*]: Fx: Log: Monad: Temporal](implicit dsl: Http4sDsl[F]): HttpRoutes[F] =
+  def allRoutes[F[*]: Fx: Log: Temporal](implicit dsl: Http4sDsl[F]): HttpRoutes[F] =
     addRoutes <+> divideRoutes <+> timeoutRoutes
 
 }

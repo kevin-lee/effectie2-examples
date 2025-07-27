@@ -32,7 +32,7 @@ object GreetingRoutes {
     }
   }
 
-  def greetRoutes[F[*]: Fx: Monad: Concurrent](greeter: Greeter[F])(implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
+  def greetRoutes[F[*]: Fx: Concurrent](greeter: Greeter[F])(implicit dsl: Http4sDsl[F]): HttpRoutes[F] = {
     import dsl._
     HttpRoutes.of[F] {
       case request @ POST -> Root / "greet" =>
@@ -46,7 +46,7 @@ object GreetingRoutes {
     }
   }
 
-  def allRoutes[F[*]: Fx: Log: Monad: Concurrent](greeter: Greeter[F])(implicit dsl: Http4sDsl[F]): HttpRoutes[F] =
+  def allRoutes[F[*]: Fx: Log: Concurrent](greeter: Greeter[F])(implicit dsl: Http4sDsl[F]): HttpRoutes[F] =
     helloWorldRoutes(greeter) <+> greetRoutes(greeter)
 
   final case class GreetRequest(greet: GreetRequest.Greet, to: GreetRequest.To)
