@@ -44,7 +44,7 @@ lazy val props = new {
   val ScodecBits = "1.1.38"
 
   val NewtypeVersion = "0.4.4"
-  val RefinedVersion = "0.11.0"
+  val RefinedVersion = "0.21.0"
 
   val KittensVersion = "3.2.0"
 
