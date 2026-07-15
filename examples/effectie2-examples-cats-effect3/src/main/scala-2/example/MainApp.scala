@@ -5,7 +5,6 @@ import cats.syntax.all._
 import effectie.instances.ce3.fx._
 import example.config.AppConfig
 import extras.cats.syntax.all._
-import loggerf.instances.cats._
 import loggerf.logger._
 
 /** @author Kevin Lee

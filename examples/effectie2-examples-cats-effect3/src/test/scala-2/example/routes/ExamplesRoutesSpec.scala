@@ -8,7 +8,6 @@ import extras.hedgehog.ce3.CatsEffectRunner
 import hedgehog._
 import hedgehog.runner._
 import loggerf.core.Log
-import loggerf.instances.cats._
 import loggerf.logger.CanLog
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
@@ -29,9 +28,20 @@ object ExamplesRoutesSpec extends Properties with CatsEffectRunner {
 
   implicit val canLog: CanLog = new loggerf.logger.CanLog {
     override def debug(message: => String): Unit = println(s"[DEBUG] $message")
-    override def info(message: => String): Unit  = println(s"[INFO] $message")
-    override def warn(message: => String): Unit  = println(s"[WARN] $message")
+
+    override def debug(throwable: Throwable)(message: => String): Unit = debug(message + "\n" + throwable.getMessage)
+
+    override def info(message: => String): Unit = println(s"[INFO] $message")
+
+    override def info(throwable: Throwable)(message: => String): Unit = info(message + "\n" + throwable.getMessage)
+
+    override def warn(message: => String): Unit = println(s"[WARN] $message")
+
+    override def warn(throwable: Throwable)(message: => String): Unit = warn(message + "\n" + throwable.getMessage)
+
     override def error(message: => String): Unit = println(s"[ERROR] $message")
+
+    override def error(throwable: Throwable)(message: => String): Unit = error(message + "\n" + throwable.getMessage)
   }
 
   def testGreeterReturnsStatusCode200: Property =
